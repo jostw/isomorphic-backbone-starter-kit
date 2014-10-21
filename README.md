@@ -1,0 +1,2 @@
+ajax-seo-starter-kit
+====================
