@@ -9,8 +9,13 @@
 
 "use strict";
 
-var gulp =    require("gulp");
+var gulp =    require("gulp"),
+    wiredep = require("wiredep").stream;
 
-gulp.task("default", function() {
-
+gulp.task("html", function() {
+    return gulp.src("views/layouts/index.hbs")
+               .pipe(wiredep())
+               .pipe(gulp.dest("views/layouts/"));
 });
+
+gulp.task("default", ["html"]);

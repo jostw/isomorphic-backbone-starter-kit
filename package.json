@@ -22,7 +22,8 @@
   "homepage": "https://github.com/jostw/ajax-seo-starter-kit",
   "dependencies": {
     "express": "^4.9.8",
-    "express-handlebars": "^1.1.0"
+    "express-handlebars": "^1.1.0",
+    "wiredep": "^1.8.6"
   },
   "devDependencies": {
     "gulp": "^3.8.8"
