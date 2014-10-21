@@ -10,11 +10,16 @@
 "use strict";
 
 var express = require("express"),
+    exphbs =  require("express-handlebars"),
 
     app = express();
 
+app.engine("hbs", exphbs({ defaultLayout: "index", extname: ".hbs" }));
+app.set("view engine", "hbs");
+app.set("views", "views/templates");
+
 app.get("/", function(req, res) {
-    res.send("Hello World");
+    res.render("home");
 });
 
 var server = app.listen(3000, function() {
