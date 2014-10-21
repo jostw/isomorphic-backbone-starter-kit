@@ -18,4 +18,8 @@ gulp.task("html", function() {
                .pipe(gulp.dest("views/layouts/"));
 });
 
-gulp.task("default", ["html"]);
+gulp.task("watch", function() {
+    gulp.watch("views/**/*.hbs", ["html"]);
+});
+
+gulp.task("default", ["html", "watch"]);
