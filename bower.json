@@ -1,0 +1,22 @@
+{
+  "name": "ajax-seo-starter-kit",
+  "version": "0.0.1",
+  "authors": [
+    "jos <mail@jos.tw>"
+  ],
+  "description": "A starter kit for building SEO-friendly AJAX application",
+  "main": "app.js",
+  "keywords": [
+    "ajax",
+    "seo"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/jostw/ajax-seo-starter-kit",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
