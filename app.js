@@ -15,8 +15,11 @@ var express = require("express"),
     app = express();
 
 app.engine("hbs", exphbs({ defaultLayout: "index", extname: ".hbs" }));
+
 app.set("view engine", "hbs");
 app.set("views", "views/templates");
+
+app.use(express.static("public"));
 
 app.get("/", function(req, res) {
     res.render("home");

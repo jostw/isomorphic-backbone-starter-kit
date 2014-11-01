@@ -9,8 +9,9 @@
 
 "use strict";
 
-var gulp =    require("gulp"),
-    wiredep = require("wiredep").stream,
+var gulp =        require("gulp"),
+    wiredep =     require("wiredep").stream,
+    runSequence = require("run-sequence"),
 
     plugins = require("gulp-load-plugins")(),
 
@@ -25,16 +26,25 @@ var gulp =    require("gulp"),
         }
     };
 
-gulp.task("html", function() {
-    return gulp.src([paths.html.src, "!"+ paths.html.index])
-               .pipe(plugins.livereload());
+gulp.task("copy", function() {
+    gulp.src([
+            "bower_components/**/*.{css,js}",
+            "!bower_components/jquery/**/*"
+        ])
+        .pipe(gulp.dest("public/bower_components/"));
+
+    return gulp.src("bower_components/jquery/dist/jquery.min.js")
+               .pipe(gulp.dest("public/js/"));
 });
 
-gulp.task("index", function() {
+gulp.task("index", ["copy"], function() {
     return gulp.src(paths.html.index)
-               .pipe(wiredep())
-               .pipe(gulp.dest("views/layouts/"))
-               .pipe(plugins.livereload());
+               .pipe(plugins.changed("views/layouts/"))
+               .pipe(wiredep({
+                    ignorePath: "../../",
+                    exclude: ["jquery"]
+               }))
+               .pipe(gulp.dest("views/layouts/"));
 });
 
 gulp.task("reload", function() {
@@ -43,17 +53,20 @@ gulp.task("reload", function() {
 });
 
 gulp.task("watch", ["reload"], function() {
-    gulp.watch([paths.html.src, "!"+ paths.html.index], ["html"]);
-    gulp.watch(paths.html.index, ["index"]);
+    gulp.watch([paths.html.src, "!"+ paths.html.index], function() {
+        runSequence("reload");
+    });
+
+    gulp.watch(paths.html.index, function() {
+        runSequence("index", "reload");
+    });
 });
 
 gulp.task("nodemon", function() {
-    plugins.livereload.listen();
-
     plugins.nodemon({
         script: paths.js.app,
         ext: "js",
-        ignore: ["gulpfile.js"]
+        ignore: ["gulpfile.js", "public/**/*.js"]
     })
     .on("start", ["watch"]);
 });
