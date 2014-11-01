@@ -11,6 +11,8 @@
 
 var gulp =        require("gulp"),
     wiredep =     require("wiredep").stream,
+    browserify =  require("browserify"),
+    source =      require("vinyl-source-stream"),
     runSequence = require("run-sequence"),
 
     plugins = require("gulp-load-plugins")(),
@@ -22,6 +24,7 @@ var gulp =        require("gulp"),
         },
 
         js: {
+            src: "assets/js/app.js",
             app: "app.js"
         }
     };
@@ -33,8 +36,10 @@ gulp.task("copy", function() {
         ])
         .pipe(gulp.dest("public/bower_components/"));
 
-    return gulp.src("bower_components/jquery/dist/jquery.min.js")
-               .pipe(gulp.dest("public/js/"));
+    gulp.src("bower_components/jquery/dist/jquery.min.js")
+        .pipe(gulp.dest("public/js/"));
+
+    return;
 });
 
 gulp.task("index", ["copy"], function() {
@@ -46,18 +51,32 @@ gulp.task("index", ["copy"], function() {
                .pipe(gulp.dest("views/layouts/"));
 });
 
+gulp.task("js", function() {
+    return browserify("./"+ paths.js.src)
+            .bundle()
+            .pipe(source("script.js"))
+            .pipe(gulp.dest("public/js/"));
+});
+
 gulp.task("reload", function() {
     return gulp.src(paths.js.app)
                .pipe(plugins.livereload());
 });
 
 gulp.task("watch", ["index"], function() {
-    gulp.watch([paths.html.src, "!"+ paths.html.index], function() {
+    gulp.watch(paths.html.index, function() {
+        runSequence("index", "reload");
+    });
+
+    gulp.watch([
+        paths.html.src,
+        "!"+ paths.html.index
+    ], function() {
         runSequence("reload");
     });
 
-    gulp.watch(paths.html.index, function() {
-        runSequence("index", "reload");
+    gulp.watch(paths.js.src, function() {
+        runSequence("js", "reload");
     });
 
     return;
@@ -67,7 +86,10 @@ gulp.task("nodemon", function() {
     plugins.nodemon({
         script: paths.js.app,
         ext: "js",
-        ignore: ["gulpfile.js", "public/**/*.js"]
+        ignore: [
+            "gulpfile.js",
+            "{assets,public}/**/*.js"
+        ]
     })
     .on("start", function() {
         runSequence("watch", "reload");
