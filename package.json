@@ -22,15 +22,14 @@
   "homepage": "https://github.com/jostw/ajax-seo-starter-kit",
   "dependencies": {
     "express": "^4.9.8",
-    "express-handlebars": "^1.1.0",
-    "wiredep": "^1.8.6"
+    "express-handlebars": "^1.1.0"
   },
   "devDependencies": {
     "gulp": "^3.8.8",
-    "gulp-changed": "^1.0.0",
     "gulp-livereload": "^2.1.1",
     "gulp-load-plugins": "^0.7.0",
     "gulp-nodemon": "^1.0.4",
-    "run-sequence": "^1.0.1"
+    "run-sequence": "^1.0.1",
+    "wiredep": "^1.8.6"
   }
 }

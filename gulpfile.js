@@ -39,7 +39,6 @@ gulp.task("copy", function() {
 
 gulp.task("index", ["copy"], function() {
     return gulp.src(paths.html.index)
-               .pipe(plugins.changed("views/layouts/"))
                .pipe(wiredep({
                     ignorePath: "../../",
                     exclude: ["jquery"]
@@ -52,7 +51,7 @@ gulp.task("reload", function() {
                .pipe(plugins.livereload());
 });
 
-gulp.task("watch", ["reload"], function() {
+gulp.task("watch", ["index"], function() {
     gulp.watch([paths.html.src, "!"+ paths.html.index], function() {
         runSequence("reload");
     });
@@ -60,6 +59,8 @@ gulp.task("watch", ["reload"], function() {
     gulp.watch(paths.html.index, function() {
         runSequence("index", "reload");
     });
+
+    return;
 });
 
 gulp.task("nodemon", function() {
@@ -68,7 +69,9 @@ gulp.task("nodemon", function() {
         ext: "js",
         ignore: ["gulpfile.js", "public/**/*.js"]
     })
-    .on("start", ["watch"]);
+    .on("start", function() {
+        runSequence("watch", "reload");
+    });
 });
 
 gulp.task("default", ["nodemon"]);
