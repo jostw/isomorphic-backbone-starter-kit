@@ -9,13 +9,12 @@
 
 "use strict";
 
-var gulp =        require("gulp"),
-    wiredep =     require("wiredep").stream,
-    browserify =  require("browserify"),
-    source =      require("vinyl-source-stream"),
-    runSequence = require("run-sequence"),
+var gulp =       require("gulp"),
+    plugins =    require("gulp-load-plugins")(),
 
-    plugins = require("gulp-load-plugins")(),
+    wiredep =    require("wiredep").stream,
+    browserify = require("browserify"),
+    source =     require("vinyl-source-stream"),
 
     paths = {
         html: {
@@ -48,41 +47,31 @@ gulp.task("index", ["copy"], function() {
                     ignorePath: "../../",
                     exclude: ["jquery"]
                }))
-               .pipe(gulp.dest("views/layouts/"));
+               .pipe(gulp.dest("views/layouts/"))
+               .pipe(plugins.livereload({ auto: false }));
+});
+
+gulp.task("html", function() {
+    return gulp.src(paths.html.src)
+               .pipe(plugins.livereload({ auto: false }));
 });
 
 gulp.task("js", function() {
     return browserify("./"+ paths.js.src)
             .bundle()
             .pipe(source("script.js"))
-            .pipe(gulp.dest("public/js/"));
-});
-
-gulp.task("reload", function() {
-    return gulp.src(paths.js.app)
-               .pipe(plugins.livereload());
+            .pipe(gulp.dest("public/js/"))
+            .pipe(plugins.livereload({ auto: false }));
 });
 
 gulp.task("watch", ["index"], function() {
-    gulp.watch(paths.html.index, function() {
-        runSequence("index", "reload");
-    });
-
-    gulp.watch([
-        paths.html.src,
-        "!"+ paths.html.index
-    ], function() {
-        runSequence("reload");
-    });
-
-    gulp.watch(paths.js.src, function() {
-        runSequence("js", "reload");
-    });
-
-    return;
+    gulp.watch(paths.html.src, ["html"]);
+    gulp.watch(paths.js.src,   ["js"]);
 });
 
 gulp.task("nodemon", function() {
+    plugins.livereload.listen();
+
     plugins.nodemon({
         script: paths.js.app,
         ext: "js",
@@ -91,9 +80,7 @@ gulp.task("nodemon", function() {
             "{assets,public}/**/*.js"
         ]
     })
-    .on("start", function() {
-        runSequence("watch", "reload");
-    });
+    .on("start", ["watch"]);
 });
 
 gulp.task("default", ["nodemon"]);
