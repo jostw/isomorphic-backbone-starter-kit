@@ -25,12 +25,16 @@
     "express-handlebars": "^1.1.0"
   },
   "devDependencies": {
+    "backbone": "^1.1.2",
+    "backbone.marionette": "^2.2.2",
     "browserify": "^6.2.0",
     "gulp": "^3.8.8",
     "gulp-livereload": "^2.1.1",
     "gulp-load-plugins": "^0.7.0",
     "gulp-nodemon": "^1.0.4",
-    "vinyl-source-stream": "^1.0.0",
-    "wiredep": "^1.8.6"
+    "jquery": "^2.1.1",
+    "marionette": "0.0.0",
+    "underscore": "^1.7.0",
+    "vinyl-source-stream": "^1.0.0"
   }
 }
