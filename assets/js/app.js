@@ -12,12 +12,30 @@
 var $ = require("jquery"),
     _ = require("underscore"),
 
-    Backbone = require("backbone");
+    Backbone =   require("backbone"),
+    Handlebars = require("handlebars");
 
 Backbone.$ = $;
 
-var Marionette = require("backbone.marionette"),
+var Marionette = require("backbone.marionette");
 
-    app = new Marionette.Application();
+$.ajaxSetup({ async: false });
+
+Marionette.Renderer.render = function(templateName, data) {
+    var template = Handlebars.partials[templateName];
+
+    if(template) {
+        template = Handlebars.compile(template);
+    }
+    else {
+        $.get("templates/" + templateName + ".hbs", function(res) {
+            Handlebars.registerPartial(templateName, res);
+
+            template = Handlebars.compile(res);
+        });
+    }
+
+    return template(data);
+};
 
 module.exports = app;
