@@ -73,7 +73,18 @@ gulp.task("build:css", function() {
     .pipe(gulp.dest("public/css/"));
 });
 
-gulp.task("build:js", function() {
+gulp.task("lint:js", function() {
+    return gulp.src([
+        "gulpfile.js",
+        "app.js",
+        "js/**/*.js",
+        "!js/vendor/*.js"
+    ])
+    .pipe(plugins.jshint())
+    .pipe(plugins.jshint.reporter(require("jshint-stylish")));
+});
+
+gulp.task("build:js", ["lint:js"], function() {
     browserify("./js/app.js")
         .bundle()
         .pipe(source("script.js"))
