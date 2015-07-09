@@ -1,2 +1,4 @@
-ajax-seo-starter-kit
+Isomorphic Backbone Starter Kit
 ====================
+
+Starter kit for isomorphic Backbone and Marionette app.

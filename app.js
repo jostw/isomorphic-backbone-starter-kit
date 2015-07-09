@@ -1,33 +1,89 @@
 /*
- * ajax-seo-starter-kit
+ * isomorphic-backbone-starter-kit
  *
- * https://github.com/jostw/ajax-seo-starter-kit
+ * https://github.com/jostw/isomorphic-backbone-starter-kit
  *
- * Copyright (c) 2014 jos
+ * Copyright (c) 2015 jos
  * Licensed under the MIT license.
  */
 
 "use strict";
 
-var express = require("express"),
-    exphbs =  require("express-handlebars"),
+var fs = require("fs");
+var path = require("path");
 
-    app = express();
+var _ = require("underscore");
+var express = require("express");
 
-app.engine("hbs", exphbs({ defaultLayout: "index", extname: ".hbs" }));
+var config = require("./js/app/config");
+var routes = require("./js/app/routes");
+var template = require("./js/app/template");
 
-app.set("view engine", "hbs");
-app.set("views", "views/templates");
+var App = function App() {
+    this.partials = this.getPartials();
 
-app.use(express.static("public"));
+    this.start();
+};
 
-app.get("/", function(req, res) {
-    res.render("home");
-});
+App.prototype.getPartials = function getPartials() {
+    return fs.readdirSync(path.resolve(__dirname, "template")).map(function(fileName) {
+        if (fileName === config.TEMPLATE_INDEX) {
+            return "";
+        } else {
+            var partial = fs.readFileSync(path.resolve(__dirname, "template", fileName), { encoding: "utf8" });
 
-var server = app.listen(3000, function() {
-    var host = server.address().address,
-        port = server.address().port;
+            return "<script id='template-" + fileName.split(".hbs")[0] + "' type='text/template'>" + partial + "</script>";
+        }
+    }).join("");
+};
 
-    console.log("Example app listening at http://%s:%s", host, port);
-});
+App.prototype.getTemplate = function getTemplate(templateName) {
+    return fs.readFileSync(path.resolve(__dirname, "template", templateName), { encoding: "utf8" });
+};
+
+App.prototype.handler = function handler(req, res, options) {
+    if (req.xhr) {
+        res.send(options.data);
+    } else {
+        var data = template.render(options.template, options.data, this.getTemplate);
+
+        res.send(template.render(config.TEMPLATE_INDEX, { main: data, partials: this.partials }, this.getTemplate));
+    }
+};
+
+App.prototype.homeHandler = function homeHandler(req, res) {
+    this.handler(req, res, {
+        template: routes.home.template,
+        data: {
+            time: new Date()
+        }
+    });
+};
+
+App.prototype.aboutHandler = function aboutHandler(req, res) {
+    this.handler(req, res, {
+        template: routes.about.template,
+        data: {
+            time: new Date()
+        }
+    });
+};
+
+App.prototype.start = function start() {
+    var app = express();
+
+    _.each(routes, function(route) {
+        app.get(route.url, this[route.handler].bind(this));
+    }.bind(this));
+
+    app.use(express.static("public"));
+
+    var server = app.listen(config.SERVER_PORT, function() {
+        var host = server.address().address;
+        var port = server.address().port;
+
+        console.log("Server listening at http://%s:%s", host, port);
+    });
+};
+
+module.exports = new App();

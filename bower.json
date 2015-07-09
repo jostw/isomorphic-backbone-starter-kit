@@ -1,0 +1,29 @@
+{
+  "name": "isomorphic-backbone-starter-kit",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jostw/isomorphic-backbone-starter-kit",
+  "authors": [
+    "jos <mail@jos.tw>"
+  ],
+  "description": "Starter kit for isomorphic Backbone and Marionette app.",
+  "main": "app.js",
+  "keywords": [
+    "isomorphic",
+    "backbone",
+    "marionette"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "html5shiv": "~3.7.2",
+    "respond": "~1.4.2",
+    "modernizr": "~2.8.3",
+    "normalize.css": "~3.0.3"
+  }
+}

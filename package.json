@@ -1,41 +1,50 @@
 {
-  "name": "ajax-seo-starter-kit",
-  "version": "0.0.1",
-  "description": "A starter kit for building SEO-friendly AJAX application",
+  "name": "isomorphic-backbone-starter-kit",
+  "version": "0.1.0",
+  "description": "Starter kit for isomorphic Backbone and Marionette app.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "bower install",
+    "start": "npm install && gulp",
+    "build": "npm install && gulp build",
+    "postbuild": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jostw/ajax-seo-starter-kit"
+    "url": "https://github.com/jostw/isomorphic-backbone-starter-kit.git"
   },
   "keywords": [
-    "ajax",
-    "seo"
+    "isomorphic",
+    "backbone",
+    "marionette"
   ],
   "author": "jos",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jostw/ajax-seo-starter-kit/issues"
+    "url": "https://github.com/jostw/isomorphic-backbone-starter-kit/issues"
   },
-  "homepage": "https://github.com/jostw/ajax-seo-starter-kit",
+  "homepage": "https://github.com/jostw/isomorphic-backbone-starter-kit",
   "dependencies": {
-    "express": "^4.9.8",
-    "express-handlebars": "^1.1.0"
+    "backbone": "^1.2.1",
+    "backbone.marionette": "^2.4.2",
+    "handlebars": "^3.0.3",
+    "jquery": "^2.1.4",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "backbone": "^1.1.2",
-    "backbone.marionette": "^2.2.2",
-    "browserify": "^6.2.0",
-    "gulp": "^3.8.8",
-    "gulp-livereload": "^2.1.1",
-    "gulp-load-plugins": "^0.7.0",
-    "gulp-nodemon": "^1.0.4",
-    "handlebars": "^2.0.0",
-    "jquery": "^2.1.1",
-    "marionette": "0.0.0",
-    "underscore": "^1.7.0",
-    "vinyl-source-stream": "^1.0.0"
+    "bower": "^1.4.1",
+    "browserify": "^10.2.4",
+    "express": "^4.13.0",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^2.3.1",
+    "gulp-inject": "^1.3.1",
+    "gulp-livereload": "^3.8.0",
+    "gulp-load-plugins": "^1.0.0-rc.1",
+    "gulp-nodemon": "^2.0.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.0.3",
+    "gulp-uglify": "^1.2.0",
+    "vinyl-source-stream": "^1.1.0",
+    "wiredep": "^3.0.0-beta"
   }
 }
