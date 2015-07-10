@@ -11,5 +11,5 @@
 module.exports = {
     SERVER_PORT: 3000,
 
-    TEMPLATE_INDEX: "index.hbs",
+    TEMPLATE_INDEX: "index.hbs"
 };
