@@ -69,6 +69,9 @@ gulp.task("build:css", function() {
         "scss/style.scss"
     ])
     .pipe(plugins.sass().on("error", plugins.sass.logError))
+    .pipe(plugins.csslint(".csslintrc"))
+    .pipe(plugins.csslint.reporter())
+    .pipe(plugins.csslint.failReporter())
     .pipe(plugins.autoprefixer())
     .pipe(gulp.dest("public/css/"));
 });
