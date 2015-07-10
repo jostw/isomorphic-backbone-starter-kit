@@ -84,7 +84,8 @@ gulp.task("lint:js", function() {
     .pipe(plugins.jshint.reporter(require("jshint-stylish")))
     .pipe(plugins.eslint())
     .pipe(plugins.eslint.format())
-    .pipe(plugins.eslint.failOnError());
+    .pipe(plugins.eslint.failOnError())
+    .pipe(plugins.jscs());
 });
 
 gulp.task("build:js", ["lint:js"], function() {
