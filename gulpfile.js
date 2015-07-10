@@ -46,6 +46,8 @@ gulp.task("build:html", ["copy:bower"], function() {
     gulp.src([
         "template/index.hbs"
     ])
+    .pipe(plugins.htmlhint(".htmlhintrc"))
+    .pipe(plugins.htmlhint.failReporter())
     .pipe(wiredep.stream({
         ignorePath: "..",
         exclude: /html5shiv|respond|modernizr/
