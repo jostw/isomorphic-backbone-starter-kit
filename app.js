@@ -26,11 +26,11 @@ var App = function App() {
 };
 
 App.prototype.getPartials = function getPartials() {
-    return fs.readdirSync(path.resolve(__dirname, "template")).map(function(fileName) {
+    return fs.readdirSync(path.resolve(__dirname, "template/min")).map(function(fileName) {
         if (fileName === config.TEMPLATE_INDEX) {
             return "";
         } else {
-            var partial = fs.readFileSync(path.resolve(__dirname, "template", fileName), { encoding: "utf8" });
+            var partial = fs.readFileSync(path.resolve(__dirname, "template/min", fileName), { encoding: "utf8" });
 
             return "<script id='template-" + fileName.split(".hbs")[0] + "' type='text/template'>" + partial + "</script>";
         }
@@ -38,7 +38,9 @@ App.prototype.getPartials = function getPartials() {
 };
 
 App.prototype.getTemplate = function getTemplate(templateName) {
-    return fs.readFileSync(path.resolve(__dirname, "template", templateName), { encoding: "utf8" });
+    var templatePath = templateName === config.TEMPLATE_INDEX ? "public" : "template/min";
+
+    return fs.readFileSync(path.resolve(__dirname, templatePath, templateName), { encoding: "utf8" });
 };
 
 App.prototype.handler = function handler(req, res, options) {

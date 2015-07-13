@@ -13,28 +13,21 @@ var gulp = require("gulp");
 var plugins = require("gulp-load-plugins")();
 
 var wiredep = require("wiredep");
+var del = require("del");
 
 var browserify = require("browserify");
 var source = require("vinyl-source-stream");
 
 gulp.task("copy:vendor", function() {
-    gulp.src([
+    return gulp.src([
         "bower_components/html5shiv/dist/html5shiv.min.js",
         "bower_components/respond/dest/respond.min.js"
     ])
     .pipe(gulp.dest("public/js/vendor/"));
 });
 
-gulp.task("copy:bower", function() {
-    gulp.src([
-        "bower_components/**/*.{css,js}",
-        "!bower_components/{html5shiv,respond,modernizr}/**/*.{css,js}"
-    ])
-    .pipe(gulp.dest("public/bower_components/"));
-});
-
 gulp.task("uglify:modernizr", function() {
-    gulp.src([
+    return gulp.src([
         "bower_components/modernizr/modernizr.js"
     ])
     .pipe(plugins.uglify())
@@ -42,8 +35,28 @@ gulp.task("uglify:modernizr", function() {
     .pipe(gulp.dest("public/js/vendor/"));
 });
 
-gulp.task("build:html", ["copy:bower"], function() {
-    gulp.src([
+gulp.task("copy:bower", function() {
+    return gulp.src([
+        "bower_components/**/*.{css,js}",
+        "!bower_components/{html5shiv,respond,modernizr}/**/*.{css,js}"
+    ])
+    .pipe(gulp.dest("public/bower_components/"));
+});
+
+gulp.task("min:partial", function() {
+    return gulp.src([
+        "template/*.hbs",
+        "!template/index.hbs"
+    ])
+    .pipe(plugins.htmlmin({
+        collapseWhitespace: true,
+        removeComments: true
+    }))
+    .pipe(gulp.dest("template/min/"));
+});
+
+gulp.task("build:html", ["copy:vendor", "uglify:modernizr", "copy:bower", "min:partial"], function() {
+    return gulp.src([
         "template/index.hbs"
     ])
     .pipe(plugins.htmlhint(".htmlhintrc"))
@@ -52,22 +65,18 @@ gulp.task("build:html", ["copy:bower"], function() {
         ignorePath: "..",
         exclude: /html5shiv|respond|modernizr/
     }))
-    .pipe(plugins.inject(gulp.src([
-        "template/*.hbs",
-        "!template/index.hbs"
-    ]), {
-        starttag: "<!-- inject:hbs -->",
-        transform: function(filePath, file) {
-            var fileName = filePath.match("template/(.+).hbs")[1];
-
-            return "<script id='template-" + fileName + "' type='text/template'>" + file.contents.toString("utf8") + "</script>";
-        }
-    }))
     .pipe(gulp.dest("public/"));
 });
 
-gulp.task("build:css", function() {
-    gulp.src([
+gulp.task("clean:build", function() {
+    return del([
+        "public/css/style-*.css",
+        "public/js/script-*.js"
+    ]);
+});
+
+gulp.task("build:css", ["clean:build"], function() {
+    return gulp.src([
         "scss/style.scss"
     ])
     .pipe(plugins.sass().on("error", plugins.sass.logError))
@@ -94,14 +103,52 @@ gulp.task("lint:js", function() {
     .pipe(plugins.jscs());
 });
 
-gulp.task("build:js", ["lint:js"], function() {
-    browserify("./js/app.js")
-        .bundle()
-        .pipe(source("script.js"))
-        .pipe(gulp.dest("public/js/"));
+gulp.task("build:js", ["clean:build", "lint:js"], function() {
+    return browserify([
+        "./js/app.js"
+    ])
+    .bundle()
+    .pipe(source("script.js"))
+    .pipe(gulp.dest("public/js/"));
 });
 
-gulp.task("watch", ["copy:vendor", "uglify:modernizr"], function() {
+gulp.task("min", ["build:html", "build:css", "build:js"], function() {
+    return gulp.src([
+        "public/index.hbs"
+    ])
+    .pipe(plugins.usemin({
+        path: "public/",
+
+        html: [
+            plugins.htmlmin({
+                collapseWhitespace: true,
+                removeComments: true,
+                minifyJS: true
+            })
+        ],
+
+        css: [
+            plugins.cssmin(),
+            plugins.rev()
+        ],
+
+        js: [
+            plugins.uglify(),
+            plugins.rev()
+        ]
+    }))
+    .pipe(gulp.dest("public/"));
+});
+
+gulp.task("clean:min", ["min"], function() {
+    return del([
+        "public/bower_components/",
+        "public/css/style.css",
+        "public/js/script.js"
+    ]);
+});
+
+gulp.task("watch", ["build:html", "build:css", "build:js"], function() {
     gulp.watch("template/*.hbs", ["build:html"]);
 
     gulp.watch("scss/**/*.scss", ["build:css"]);
@@ -133,7 +180,4 @@ gulp.task("default", ["watch"], function() {
     });
 });
 
-gulp.task("build", [
-    "copy:vendor", "uglify:modernizr",
-    "build:html", "build:css", "build:js"
-]);
+gulp.task("build", ["min", "clean:min"]);
