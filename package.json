@@ -1,7 +1,7 @@
 {
   "name": "isomorphic-backbone-starter-kit",
   "version": "0.1.0",
-  "description": "Starter kit for isomorphic Backbone and Marionette app.",
+  "description": "Starter kit for isomorphic Backbone and Marionette application.",
   "main": "app.js",
   "scripts": {
     "postinstall": "bower install",
