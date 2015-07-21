@@ -27,7 +27,7 @@ git clone https://github.com/jostw/isomorphic-backbone-starter-kit.git
 
 - Make sure [Node.js](https://nodejs.org/) is installed properly.
 
-- Use ` npm start ` for watching files and developing.
+- Use ` npm start ` for watching files and developing at ` http://localhost:3000 `.
 
 - Use ` npm run build ` for production.
 
