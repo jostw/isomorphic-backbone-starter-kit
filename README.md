@@ -27,19 +27,19 @@ git clone https://github.com/jostw/isomorphic-backbone-starter-kit.git
 
 - Make sure [Node.js](https://nodejs.org/) is installed properly.
 
-- Use ``` npm start ``` for watching files and developing.
+- Use ` npm start ` for watching files and developing.
 
-- Use ``` npm run build ``` for production.
+- Use ` npm run build ` for production.
 
 ## Development
 
-- ``` app.js ```: server side application
-- ``` js/app.js ```: client side application
+- ` app.js `: server side application
+- ` js/app.js `: client side application
 
 - Following features are isomorphic, shared between server side and client side applications.
-    - ``` js/app/routes.js ```: settings for routing
-    - ``` js/app/template.js ```: store and render templates with Handlebars
-    - ``` template/*.hbs ```: Handlebars templates
+    - ` js/app/routes.js `: settings for routing
+    - ` js/app/template.js `: store and render templates with Handlebars
+    - ` template/*.hbs `: Handlebars templates
 
 ## Contribute
 
