@@ -37,7 +37,7 @@ git clone https://github.com/jostw/isomorphic-backbone-starter-kit.git
 - ` js/app.js `: client side application
 
 - Following features are isomorphic, shared between server side and client side applications.
-    - ` js/app/routes.js `: settings for routing
+    - ` js/app/routes.js `: routing settings
     - ` js/app/template.js `: store and render templates with Handlebars
     - ` template/*.hbs `: Handlebars templates
 
